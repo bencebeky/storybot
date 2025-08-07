@@ -136,7 +136,7 @@
                 if (data1.candidates?.[0]?.finishReason == 'STOP') {
                     continuation1 += '.';
                 }
-                document.getElementById('option1').textContext = continuation1;
+                document.getElementById('option1').textContent = continuation1;
             } catch (error) {
                 storyElement.textContent = `${error.status} Error: ${error.message}`;
                 document.getElementById('option1').textContent = 'error';
