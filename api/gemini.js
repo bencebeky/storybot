@@ -49,7 +49,7 @@ export default async function handler(req, res) {
         }
 
         const model = 'gemini-2.5-flash';
-        const url = 'https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
         const requestBody = {
             systemInstruction,
@@ -65,10 +65,11 @@ export default async function handler(req, res) {
 
         };
 
+        const api_key = process.env.GEMINI_API_KEY;
         const options = {
             method: 'POST',
             headers: {
-                'x-goog-api-key': process.env.GEMINI_API_KEY,
+                'x-goog-api-key': api_key,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestBody)
@@ -84,7 +85,8 @@ export default async function handler(req, res) {
                 details: errorData,
                 url: url,
                 requestBody: requestBody,
-                options: options
+                options: options,
+                api_key: api_key
             });
         }
 
