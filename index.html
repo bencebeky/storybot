@@ -51,7 +51,8 @@
     </div>
     <script>
         function continueStory(fruit) {
-            document.getElementById('story').textContent = fruit;
+            const storyElement = document.getElementById('story');
+            storyElement.textContent += fruit;
         }
 
         async function askAI() {
