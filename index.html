@@ -21,7 +21,7 @@
             margin: 10px 0;
         }
 
-        .fruit-option {
+        .option {
             background-color: lightblue;
         }
 
@@ -40,10 +40,10 @@
 <body>
     <div class="container">
         <h2>Create a story with AI</h2>
-        <div id="story">Choose between three AI-generated options to write your story.</div><br>
-        <button id="option1" onclick="continueStory(this.textContent)" class="fruit-option" style="cursor: pointer;">apple </button>
-        <button id="option2" onclick="continueStory(this.textContent)" class="fruit-option" style="cursor: pointer;">banana</button>
-        <button id="option3" onclick="continueStory(this.textContent)" class="fruit-option" style="cursor: pointer;">mango</button>
+        <div id="story">Choose a genre for your story.</div><br>
+        <button id="option1" onclick="continueStory(this.textContent)" class="option" style="cursor: pointer;">Slice of Life</button>
+        <button id="option2" onclick="continueStory(this.textContent)" class="option" style="cursor: pointer;">Animal Tale</button>
+        <button id="option3" onclick="continueStory(this.textContent)" class="option" style="cursor: pointer;">Historical Fiction</button>
 
         <div style="margin-top: 30px;">
             <h2>Ask AI about your fruit choice</h2>
@@ -55,10 +55,41 @@
     </div>
     <script>
         let genre;
-        
-        function continueStory(fruit) {
+
+        function continueStory(content) {
             const storyElement = document.getElementById('story');
-            storyElement.textContent += fruit;
+            const aiInstruction = 'Choose between three AI-generated options to write your story.'
+
+            if (typeof genre == 'undefined') {
+                genre = content;
+                storyElement.textContent = aiInstruction;
+                return;
+            }
+
+            messages = [{
+                    role: 'system',
+                    content: 'You are a helpful assistant that writes short ' +
+                        'stories appropriate for all ages in the genre of ' +
+                        '${genre}. Do not include violence, darkness, ' +
+                        'crudeness, or hurtful behavior in your stories.'
+                },
+                {
+                    role: 'user',
+                    content: 'Write a short story in the genre of ${genre}.'
+                }
+            ]
+
+            if (storyElement.textContent == aiInstruction) {
+                storyElement.textContent = ""
+            } else {
+                storyElement.textContent += " "
+                messages.push({
+                    role: 'assistant',
+                    content: storyElement.textContent
+                });
+            }
+
+            console.log(messages);
         }
 
         async function askAI() {
