@@ -36,7 +36,7 @@
 <body>
     <div class="container">
         <h2>Create a story with AI</h2>
-        <textarea id="story" name="story" placeholder="Choose between three AI-generated options to write your story." style="width: 300px; margin: 10px 0;"></textarea><br>
+        <textarea id="story" name="story" placeholder="Choose between three AI-generated options to write your story." style="width: 300px; margin: 10px 0; min-height: 60px; resize: vertical; overflow-y: auto;"></textarea><br>
         <button id="option1" onclick="continueStory(this.textContent)" class="fruit-option" style="cursor: pointer;">apple</button>
         <button id="option2" onclick="continueStory(this.textContent)" class="fruit-option" style="cursor: pointer;">banana</button>
         <button id="option3" onclick="continueStory(this.textContent)" class="fruit-option" style="cursor: pointer;">mango</button>
