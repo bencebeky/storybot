@@ -23,6 +23,7 @@
 
         .option {
             background-color: lightblue;
+            cursor: pointer;
         }
 
         #story {
@@ -34,6 +35,12 @@
             overflow-y: auto;
         }
 
+        #loading {
+            display: none;
+            margin-top: 10px;
+            color: #666;
+        }
+
     </style>
 </head>
 
@@ -41,17 +48,10 @@
     <div class="container">
         <h2>Create a story with AI</h2>
         <div id="story">Choose a genre for your story.</div><br>
-        <button id="option1" onclick="continueStory(this.textContent)" class="option" style="cursor: pointer;">Slice of Life</button>
-        <button id="option2" onclick="continueStory(this.textContent)" class="option" style="cursor: pointer;">Animal Tale</button>
-        <button id="option3" onclick="continueStory(this.textContent)" class="option" style="cursor: pointer;">Historical Fiction</button>
-
-        <div style="margin-top: 30px;">
-            <h2>Ask AI about your fruit choice</h2>
-            <textarea id="userInput" placeholder="Ask something about your favorite fruit..." style="width: 300px; height: 60px; margin: 10px 0;"></textarea><br>
-            <button onclick="askAI()" style="padding: 10px 20px; cursor: pointer;">Ask AI</button>
-            <div id="aiResponse" style="margin-top: 20px; padding: 10px; border: 1px solid #ddd; min-height: 50px; background-color: #f9f9f9; white-space: pre-wrap;"></div>
-            <div id="loading" style="display: none; margin-top: 10px; color: #666;">Thinking...</div>
-        </div>
+        <button id="option1" onclick="continueStory(this.textContent)" class="option">Slice of Life</button>
+        <button id="option2" onclick="continueStory(this.textContent)" class="option">Animal Tale</button>
+        <button id="option3" onclick="continueStory(this.textContent)" class="option">Historical Fiction</button>
+        <div id="loading">Thinking...</div>
     </div>
     <script>
         let genre;
@@ -129,6 +129,7 @@
                 const data = await response.json();
                 const aiMessage = data.candidates?.[0]?.content.parts[0].text || 'No response received';
                 console.log(data.candidates);
+                // TOOD extract stopping character and re-append
 
                 storyElement.textContent = aiMessage;
 
@@ -139,84 +140,8 @@
                 loading.style.display = 'none';
             }
 
-            // .trim()
+            // TODO .trim()
         }
-
-        async function askAI() {
-            const userInput = document.getElementById('userInput').value.trim();
-            const selectedFruit = document.getElementById('story').textContent;
-
-            if (!userInput) {
-                alert('Please enter a question first!');
-                return;
-            }
-
-            const loading = document.getElementById('loading');
-            const responseDiv = document.getElementById('aiResponse');
-
-            loading.style.display = 'block';
-            responseDiv.textContent = '';
-
-            try {
-                const systemInstruction = {
-                    parts: [{
-                        text: 'You are a helpful assistant that answers questions about fruits and food.'
-                    }]
-                };
-                const contents = [{
-                        role: 'user',
-                        parts: [{
-                            text: selectedFruit ?
-                                `My favorite fruit is ${selectedFruit}. ${userInput}` : userInput
-                        }]
-                    },
-                    {
-                        role: 'model',
-                        parts: [{
-                            text: 'I see that your favorite fruit is'
-                        }]
-                    }
-                ];
-
-                const response = await fetch('/api/gemini', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        systemInstruction: systemInstruction,
-                        contents: contents
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Request failed');
-                }
-
-                const data = await response.json();
-                const aiMessage = data.candidates?.[0]?.content.parts[0].text || 'No response received';
-                console.log(data.candidates);
-
-                responseDiv.textContent = aiMessage;
-
-            } catch (error) {
-                console.error('Error:', error);
-                responseDiv.textContent = `Error: ${error.message}`;
-            } finally {
-                loading.style.display = 'none';
-            }
-        }
-
-        // Allow Enter key to submit
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('userInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    askAI();
-                }
-            });
-        });
 
     </script>
 </body>
