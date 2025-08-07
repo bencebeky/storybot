@@ -30,9 +30,9 @@
     <div class="container">
         <h2>Create a story with AI</h2>
         <textarea id="story" name="story" placeholder="Choose between three AI-generated options to write your story." style="width: 300px; margin: 10px 0;"></textarea><br>
-        <div onclick="selectFruit('apple')" class="fruit-option" style="cursor: pointer;">apple</div>
-        <div onclick="selectFruit('banana')" class="fruit-option" style="cursor: pointer;">banana</div>
-        <div onclick="selectFruit('mango')" class="fruit-option" style="cursor: pointer;">mango</div>
+        <div id="option1" onclick="selectFruit(this.textContent)" class="fruit-option" style="cursor: pointer;">apple</div>
+        <div id="option2" onclick="selectFruit(this.textContent)" class="fruit-option" style="cursor: pointer;">banana</div>
+        <div id="option3" onclick="selectFruit(this.textContent)" class="fruit-option" style="cursor: pointer;">mango</div>
         
         <div style="margin-top: 30px;">
             <h2>Ask AI about your fruit choice</h2>
