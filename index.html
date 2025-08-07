@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>Create a story with AI</title>
     <style>
         body {
             display: flex;
@@ -20,7 +20,7 @@
         .fruit-option {
             background-color: lightblue;
         }
-        #answer {
+        #story {
             border: 1px solid #ccc;
             padding: 5px;
         }
@@ -28,9 +28,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Hello World!</h1>
-        <div>What is your favorite fruit?</div>
-        <div id="answer" name="answer"></div>
+        <h2>Create a story with AI</h2>
+        <textarea id="story" name="story" placeholder="Choose between three AI-generated options to write your story." style="width: 300px; margin: 10px 0;"></textarea><br>
         <div onclick="selectFruit('apple')" class="fruit-option" style="cursor: pointer;">apple</div>
         <div onclick="selectFruit('banana')" class="fruit-option" style="cursor: pointer;">banana</div>
         <div onclick="selectFruit('mango')" class="fruit-option" style="cursor: pointer;">mango</div>
@@ -45,12 +44,12 @@
     </div>
     <script>
         function selectFruit(fruit) {
-            document.getElementById('answer').textContent = fruit;
+            document.getElementById('story').textContent = fruit;
         }
 
         async function askAI() {
             const userInput = document.getElementById('userInput').value.trim();
-            const selectedFruit = document.getElementById('answer').textContent;
+            const selectedFruit = document.getElementById('story').textContent;
             
             if (!userInput) {
                 alert('Please enter a question first!');
