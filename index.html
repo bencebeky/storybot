@@ -56,15 +56,19 @@
     <script>
         let genre;
 
-        function continueStory(content) {
+        async function continueStory(content) {
             const storyElement = document.getElementById('story');
-            const aiInstruction = 'Choose between three AI-generated options to write your story.'
 
             if (typeof genre == 'undefined') {
                 genre = content;
                 storyElement.textContent = aiInstruction;
                 return;
             }
+
+            const aiInstruction = 'Choose between three AI-generated options to write your story.'
+            const loading = document.getElementById('loading');
+
+            loading.style.display = 'block';
 
             messages = [{
                     role: 'system',
@@ -90,6 +94,37 @@
             }
 
             console.log(messages);
+
+            try {
+                const response = await fetch('/api/openrouter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: messages,
+                        model: 'meta-llama/llama-3.2-3b-instruct:free',
+                        stop: ['.', '!', '?']
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Request failed');
+                }
+
+                const data = await response.json();
+                const aiMessage = data.choices?.[0]?.message?.content || 'No response received';
+                console.log(data.choices);
+
+                storyElement.textContent = aiMessage;
+
+            } catch (error) {
+                console.error('Error:', error);
+                storyElement.textContent = `Error: ${error.message}`;
+            } finally {
+                loading.style.display = 'none';
+            }
 
             // .trim()
         }
@@ -132,7 +167,8 @@
                     },
                     body: JSON.stringify({
                         messages: messages,
-                        model: 'meta-llama/llama-3.2-3b-instruct:free'
+                        model: 'meta-llama/llama-3.2-3b-instruct:free',
+                        stop: ['.', '!', '?']
                     })
                 });
 
@@ -143,6 +179,7 @@
 
                 const data = await response.json();
                 const aiMessage = data.choices?.[0]?.message?.content || 'No response received';
+                console.log(data.choices);
 
                 responseDiv.textContent = aiMessage;
 
