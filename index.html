@@ -121,10 +121,10 @@
             try {
                 const response1 = await fetch('/api/gemini', options);
                 const data1 = await response.json();
-                console.log(response1);
-                console.log(data1);
+                console.error(response1);
+                console.error(data1);
                 if (!response1.ok) {
-                    console.log(response1.status, data1);
+                    console.error(response1.status, data1);
                     throw new Error({
                         status: response1.status,
                         message: data1
