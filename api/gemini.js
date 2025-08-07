@@ -38,7 +38,7 @@ export default async function handler(req, res) {
 
     try {
         const {
-            model = 'gemini-1.5-flash-latest', systemInstruction, contents, generationConfig
+            model = 'gemini-2.5-flash-latest', systemInstruction, contents, generationConfig
         } = req.body;
 
         if (!contents || !Array.isArray(contents)) {
