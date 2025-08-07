@@ -8,15 +8,18 @@
         div {
             margin: 10px 0;
         }
+        .fruit-option {
+            background-color: lightblue;
+        }
     </style>
 </head>
 <body>
     <h1>Hello World!</h1>
     <div>What is your favorite fruit?</div>
     <div id="answer" name="answer"></div>
-    <div onclick="selectFruit('apple')" style="cursor: pointer;">apple</div>
-    <div onclick="selectFruit('banana')" style="cursor: pointer;">banana</div>
-    <div onclick="selectFruit('mango')" style="cursor: pointer;">mango</div>
+    <div onclick="selectFruit('apple')" class="fruit-option" style="cursor: pointer;">apple</div>
+    <div onclick="selectFruit('banana')" class="fruit-option" style="cursor: pointer;">banana</div>
+    <div onclick="selectFruit('mango')" class="fruit-option" style="cursor: pointer;">mango</div>
     <script>
         function selectFruit(fruit) {
             document.getElementById('answer').textContent = fruit;
