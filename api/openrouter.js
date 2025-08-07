@@ -1,7 +1,34 @@
+// Simple in-memory rate limiting (resets on function restart)
+const rateLimitMap = new Map();
+
 export default async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Rate limiting: 100 requests per 10 minutes
+  const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const now = Date.now();
+  const windowMs = 10 * 60 * 1000; // 10 minutes
+  const maxRequests = 100;
+
+  if (!rateLimitMap.has(clientIP)) {
+    rateLimitMap.set(clientIP, { count: 1, resetTime: now + windowMs });
+  } else {
+    const clientData = rateLimitMap.get(clientIP);
+    if (now > clientData.resetTime) {
+      clientData.count = 1;
+      clientData.resetTime = now + windowMs;
+    } else {
+      clientData.count++;
+      if (clientData.count > maxRequests) {
+        return res.status(429).json({ 
+          error: 'Too many requests. Please try again later.',
+          retryAfter: Math.ceil((clientData.resetTime - now) / 1000)
+        });
+      }
+    }
   }
 
   try {
