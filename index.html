@@ -118,8 +118,8 @@
                 }
 
                 const data = await response.json();
-                const aiMessage = data.choices?.[0]?.message?.content || 'No response received';
-                console.log(data.choices);
+                const aiMessage = data.content?.[0]?.text || 'No response received';
+                console.log(data.content);
 
                 storyElement.textContent = aiMessage;
 
@@ -182,8 +182,8 @@
                 }
 
                 const data = await response.json();
-                const aiMessage = data.choices?.[0]?.message?.content || 'No response received';
-                console.log(data.choices);
+                const aiMessage = data.content?.[0]?.text || 'No response received';
+                console.log(data.content);
 
                 responseDiv.textContent = aiMessage;
 

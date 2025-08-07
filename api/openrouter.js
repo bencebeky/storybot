@@ -69,18 +69,7 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
-    
-    // Convert Claude response to OpenAI format for compatibility
-    const openAIResponse = {
-      choices: [{
-        message: {
-          role: 'assistant',
-          content: data.content?.[0]?.text || ''
-        }
-      }]
-    };
-    
-    res.status(200).json(openAIResponse);
+    res.status(200).json(data);
 
   } catch (error) {
     console.error('Proxy error:', error);
