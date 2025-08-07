@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello World</title>
     <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
         div {
             margin: 10px 0;
         }
@@ -18,12 +29,14 @@
     </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <div>What is your favorite fruit?</div>
-    <div id="answer" name="answer"></div>
-    <div onclick="selectFruit('apple')" class="fruit-option" style="cursor: pointer;">apple</div>
-    <div onclick="selectFruit('banana')" class="fruit-option" style="cursor: pointer;">banana</div>
-    <div onclick="selectFruit('mango')" class="fruit-option" style="cursor: pointer;">mango</div>
+    <div class="container">
+        <h1>Hello World!</h1>
+        <div>What is your favorite fruit?</div>
+        <div id="answer" name="answer"></div>
+        <div onclick="selectFruit('apple')" class="fruit-option" style="cursor: pointer;">apple</div>
+        <div onclick="selectFruit('banana')" class="fruit-option" style="cursor: pointer;">banana</div>
+        <div onclick="selectFruit('mango')" class="fruit-option" style="cursor: pointer;">mango</div>
+    </div>
     <script>
         function selectFruit(fruit) {
             document.getElementById('answer').textContent = fruit;
