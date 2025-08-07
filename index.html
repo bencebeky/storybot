@@ -69,18 +69,19 @@
             const loading = document.getElementById('loading');
             loading.style.display = 'block';
 
-            messages = [{
-                    role: 'system',
-                    content: `You are a helpful assistant that writes short ` +
+            const systemInstruction = {
+                parts: [{ text: `You are a helpful assistant that writes short ` +
                         `stories appropriate for all ages in the genre of ` +
                         `${genre}. Do not include violence, darkness, ` +
                         `crudeness, or hurtful behavior in your stories.`
-                },
+                }]
+            };
+            const contents = [
                 {
                     role: 'user',
-                    content: `Write a short story in the genre of ${genre}.`
+                    parts: [{ text: `Write a short story in the genre of ${genre}.` }]
                 }
-            ]
+            ];
 
             if (storyElement.textContent == "") {
                 storyElement.textContent = aiInstruction;
@@ -91,23 +92,24 @@
                     storyElement.textContent += ' ';
                     storyElement.textContent += content;
                 }
-                messages.push({
-                    role: 'assistant',
-                    content: storyElement.textContent + ' '
+                contents.push({
+                    role: 'model',
+                    parts: [{ text: storyElement.textContent + ' ' }]
                 });
             }
 
-            console.log(messages);
+            console.log({ systemInstruction, contents });
 
             try {
-                const response = await fetch('/api/anthropic', {
+                const response = await fetch('/api/gemini', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        messages: messages,
-                        stop: ['.', '!', '?']
+                        systemInstruction: systemInstruction,
+                        contents: contents,
+                        generationConfig: {
+                           stopSequences: ['.', '!', '?']
+                        }
                     })
                 });
 
@@ -117,8 +119,8 @@
                 }
 
                 const data = await response.json();
-                const aiMessage = data.content?.[0]?.text || 'No response received';
-                console.log(data.content);
+                const aiMessage = data.candidates?.[0]?.content.parts[0].text || 'No response received';
+                console.log(data.candidates);
 
                 storyElement.textContent = aiMessage;
 
@@ -148,28 +150,27 @@
             responseDiv.textContent = '';
 
             try {
-                const messages = [{
-                        role: 'system',
-                        content: 'You are a helpful assistant that answers questions about fruits and food.'
-                    },
+                const systemInstruction = {
+                    parts: [{ text: 'You are a helpful assistant that answers questions about fruits and food.'}]
+                };
+                const contents = [
                     {
                         role: 'user',
-                        content: selectedFruit ?
-                            `My favorite fruit is ${selectedFruit}. ${userInput}` : userInput
+                        parts: [{ text: selectedFruit ?
+                            `My favorite fruit is ${selectedFruit}. ${userInput}` : userInput }]
                     },
                     {
-                        role: 'assistant',
-                        content: 'I see that your favorite fruit is'
+                        role: 'model',
+                        parts: [{ text: 'I see that your favorite fruit is' }]
                     }
                 ];
 
-                const response = await fetch('/api/anthropic', {
+                const response = await fetch('/api/gemini', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        messages: messages,
+                        systemInstruction: systemInstruction,
+                        contents: contents
                     })
                 });
 
@@ -179,8 +180,8 @@
                 }
 
                 const data = await response.json();
-                const aiMessage = data.content?.[0]?.text || 'No response received';
-                console.log(data.content);
+                const aiMessage = data.candidates?.[0]?.content.parts[0].text || 'No response received';
+                console.log(data.candidates);
 
                 responseDiv.textContent = aiMessage;
 
