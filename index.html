@@ -78,20 +78,23 @@
                     text: `You are a helpful assistant that writes short ` +
                         `stories appropriate for all ages in the genre of ` +
                         `${genre}. Do not include violence, darkness, ` +
-                        `crudeness, or hurtful behavior in your stories. Use
-                        short sentences.`
+                        `crudeness, or hurtful behavior in your stories.`
                 }]
             };
-            const contents = [{
-                role: 'user',
-                parts: [{
-                    text: `Write a short story in the genre of ${genre}. Use
-                    short sentences.`
-                }]
-            }];
 
             if (storyElement.textContent == "") {
                 storyElement.textContent = aiInstruction;
+
+                contents = [{
+                    role: 'user',
+                    parts: [{
+                        text: `Write three different alternatives for the very ` +
+                            `first sentence of a short story in the genre of ` +
+                            `${genre}. Enclose each sentence in <sentence> ` +
+                            `tags. Do not write anything other than these ` +
+                            `three sentences.`
+                    }]
+                }];
             } else {
                 if (storyElement.textContent == aiInstruction) {
                     storyElement.textContent = content;
@@ -99,12 +102,29 @@
                     storyElement.textContent += ' ';
                     storyElement.textContent += content;
                 }
-                contents.push({
-                    role: 'model',
-                    parts: [{
-                        text: storyElement.textContent + ' '
-                    }]
-                });
+                contents = [{
+                        role: 'user',
+                        parts: [{
+                            text: `Write the beginning of a short story ` +
+                                `in the genre of ${genre}.`
+                        }]
+                    },
+                    {
+                        role: 'model',
+                        parts: [{
+                            text: storyElement.textContent
+                        }]
+                    }, {
+                        role: 'user',
+                        parts: [{
+                            text: `Write three different alternatives for the ` +
+                                `next sentence of the short story you just ` +
+                                `wrote. Enclose each sentence in <sentence> ` +
+                                `tags. Do not write anything other than ` +
+                                `these three sentences.`
+                        }]
+                    }
+                ];
             }
 
             const options = {
@@ -119,53 +139,24 @@
             };
 
             try {
-                const response1 = await fetch('/api/gemini', options);
-                const data1 = await response1.json();
-                console.error(response1);
-                console.error(data1);
-                if (!response1.ok) {
-                    console.error(response1.status, data1);
-                    throw new Error(`${response1.status} Error: ${data1.details}`);
+                const response = await fetch('/api/gemini', options);
+                const data = await response1json();
+                console.log(response);
+                console.log(data);
+                if (!response.ok) {
+                    console.error(response.status, data);
+                    throw new Error(`${response.status} Error: ${data.details}`);
                 }
 
-                continuation1 = data1.candidates?.[0]?.content.parts[0].text || '';
-                continuation1 = continuation1.trim();
-                if (data1.candidates?.[0]?.finishReason == 'STOP') {
-                    continuation1 += '.';
-                }
-                document.getElementById('option1').textContent = continuation1;
+                // parse out three sentences
 
-                const response2 = await fetch('/api/gemini', options);
-                const data2 = await response2.json();
-                console.error(response2);
-                console.error(data2);
-                if (!response2.ok) {
-                    console.error(response2.status, data2);
-                    throw new Error(`${response2.status} Error: ${data2.details}`);
-                }
+                sentences = data.candidates?.[0]?.content.parts[0].text || '';
 
-                continuation2 = data2.candidates?.[0]?.content.parts[0].text || '';
-                continuation2 = continuation2.trim();
-                if (data2.candidates?.[0]?.finishReason == 'STOP') {
-                    continuation2 += '.';
-                }
-                document.getElementById('option2').textContent = continuation2;
+                // trim
 
-                const response3 = await fetch('/api/gemini', options);
-                const data3 = await response3.json();
-                console.error(response3);
-                console.error(data3);
-                if (!response3.ok) {
-                    console.error(response3.status, data3);
-                    throw new Error(`${response3.status} Error: ${data3.details}`);
-                }
-
-                continuation3 = data3.candidates?.[0]?.content.parts[0].text || '';
-                continuation3 = continuation3.trim();
-                if (data3.candidates?.[0]?.finishReason == 'STOP') {
-                    continuation3 += '.';
-                }
-                document.getElementById('option3').textContent = continuation3;
+                document.getElementById('option1').textContent = sentences;
+                document.getElementById('option2').textContent = sentences;
+                document.getElementById('option3').textContent = sentences;
             } catch (error) {
                 storyElement.textContent = error.message;
                 document.getElementById('option1').textContent = 'error';
