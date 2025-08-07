@@ -57,8 +57,8 @@
     <script>
         let genre;
 
-        async function continueStory(content) {
-            if (content == 'error') {
+        async function continueStory(optionText) {
+            if (optionText == 'error') {
                 return;
             }
 
@@ -70,7 +70,7 @@
             const aiInstruction = 'Choose between three AI-generated options to write your story.'
 
             if (typeof genre == 'undefined') {
-                genre = content;
+                genre = optionText;
                 storyElement.textContent = "";
             }
 
@@ -91,6 +91,8 @@
                 }]
             };
 
+            let contents;
+
             if (storyElement.textContent == "") {
                 storyElement.textContent = aiInstruction;
 
@@ -107,10 +109,10 @@
                 }];
             } else {
                 if (storyElement.textContent == aiInstruction) {
-                    storyElement.textContent = content;
+                    storyElement.textContent = optionText;
                 } else {
                     storyElement.textContent += ' ';
-                    storyElement.textContent += content;
+                    storyElement.textContent += optionText;
                 }
                 contents = [{
                         role: 'user',
@@ -129,7 +131,7 @@
                 storySoFar = storyElement.textContent;
                 lastChar = storySoFar[storySoFar.length - 1]
                 if (lastChar == '.' || lastChar == '!' || lastChar == '?') {
-                    content.push({
+                    contents.push({
                         role: 'user',
                         parts: [{
                             text: 'Write three different alternatives for ' +
@@ -145,7 +147,7 @@
                         }]
                     })
                 } else {
-                    content.push({
+                    contents.push({
                         role: 'user',
                         parts: [{
                             text: 'Write three different alternatives for ' +
@@ -159,7 +161,7 @@
                 };
             }
 
-            content.push({
+            contents.push({
                 role: 'model',
                 parts: [{
                     text: '<sentence>'
