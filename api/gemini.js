@@ -38,7 +38,8 @@ export default async function handler(req, res) {
 
     try {
         const {
-            model = 'gemini-2.5-flash', systemInstruction, contents
+            systemInstruction,
+            contents
         } = req.body;
 
         if (!contents || !Array.isArray(contents)) {
@@ -47,6 +48,7 @@ export default async function handler(req, res) {
             });
         }
 
+        const model = 'gemini-2.5-flash';
         const url = 'https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent';
 
         const requestBody = {
@@ -63,14 +65,20 @@ export default async function handler(req, res) {
 
         };
 
-        const response = await fetch(url, {
+        console.log(requestBody);
+
+        const options = {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'x-goog-api-key': process.env.GEMINI_API_KEY,
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestBody)
-        });
+        };
+
+        console.log(options);
+
+        const response = await fetch(url, options);
 
         if (!response.ok) {
             const errorData = await response.text();
