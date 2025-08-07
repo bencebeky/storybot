@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages, model = 'meta-llama/llama-3.2-3b-instruct:free' } = req.body;
+    const { messages, model = 'meta-llama/llama-3.2-3b-instruct:free', stop = [] } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Messages array is required' });
