@@ -126,8 +126,8 @@
                         }]
                     }
                 ];
-                content = storyElement.textContent;
-                lastChar = content[content.length - 1]
+                storySoFar = storyElement.textContent;
+                lastChar = storySoFar[storySoFar.length - 1]
                 if (lastChar == '.' || lastChar == '!' || lastChar == '?') {
                     content.push({
                         role: 'user',
