@@ -88,12 +88,12 @@
                 contents = [{
                     role: 'user',
                     parts: [{
-                        text: `Write three different alternatives for the very ` +
-                            `first sentence of a short story in the genre of ` +
-                            `${genre}. ` +
-                            'Enclose each sentence in <sentence> ' +
-                            'tags. Make the sentences short, but not too short. Do not write ' +
-                            'anything other than these three sentences.'
+                        text: `Write three different alternatives for the ` +
+                            `very first sentence of a short story in the ` +
+                            `genre of ${genre}. Enclose each sentence in ` +
+                            `<sentence> tags. Make the sentences short, but ` +
+                            `not too short. Do not write anything other than ` +
+                            `these three sentences.`
                     }]
                 }];
             } else {
@@ -123,25 +123,28 @@
                     content.push({
                         role: 'user',
                         parts: [{
-                            text: `Write three different alternatives for the ` +
-                                `next phrase or sentence of the short story you just ` +
-                                `wrote. They can be complete sentences ending in a period, question mark, ` +
-                                `or exclamation mark, or they can be fractional sentences ending in comma or ellipses. ` +
-                                'Enclose each phrase or sentence in <sentence> ' +
-                                'tags. Make the phrases short, but not too short. Do not write ' +
-                                'anything other than these three sentences or phrases.'
+                            text: 'Write three different alternatives for ' +
+                                'the next phrase or sentence of the short ' +
+                                'story you just wrote. They can be complete ' +
+                                'sentences ending in a period, question ' +
+                                'mark, or exclamation mark, or they can be ' +
+                                'fractional sentences ending in comma or ' +
+                                'ellipses. Enclose each phrase or sentence ' +
+                                'in <sentence> tags. Make the phrases short, ' +
+                                'but not too short. Do not write anything ' +
+                                'other than these three sentences or phrases.'
                         }]
                     })
                 } else {
                     content.push({
                         role: 'user',
                         parts: [{
-                            text: `Write three different alternatives for finishing ` +
-                                `the last sentence of the short story you just ` +
-                                `wrote. ` +
-                                'Enclose each ending in <sentence> ' +
-                                'tags. Make the endings short, but not too short. Do not write ' +
-                                'anything other than these three sentence endings.'
+                            text: 'Write three different alternatives for ' +
+                                'finishing the last sentence of the short ' +
+                                'story you just wrote. Enclose each ending ' +
+                                'in <sentence> tags. Make the endings short, ' +
+                                'but not too short. Do not write anything ' +
+                                'other than these three sentence endings.'
                         }]
                     });
                 };
