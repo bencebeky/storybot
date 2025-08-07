@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,32 +12,35 @@
             margin: 0;
             font-family: Arial, sans-serif;
         }
+
         .container {
             text-align: center;
         }
+
         div {
             margin: 10px 0;
         }
+
         .fruit-option {
             background-color: lightblue;
         }
+
         #story {
             border: 1px solid #ccc;
             padding: 5px;
         }
+
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>Create a story with AI</h2>
         <textarea id="story" name="story" placeholder="Choose between three AI-generated options to write your story." style="width: 300px; margin: 10px 0;"></textarea><br>
-        <button id="option1" onclick="selectFruit(this.textContent)"
-        class="fruit-option" style="cursor: pointer;">apple</button>
-        <button id="option2" onclick="selectFruit(this.textContent)"
-        class="fruit-option" style="cursor: pointer;">banana</button>
-        <button id="option3" onclick="selectFruit(this.textContent)"
-        class="fruit-option" style="cursor: pointer;">mango</button>
-        
+        <button id="option1" onclick="selectFruit(this.textContent)" class="fruit-option" style="cursor: pointer;">apple</button>
+        <button id="option2" onclick="selectFruit(this.textContent)" class="fruit-option" style="cursor: pointer;">banana</button>
+        <button id="option3" onclick="selectFruit(this.textContent)" class="fruit-option" style="cursor: pointer;">mango</button>
+
         <div style="margin-top: 30px;">
             <h2>Ask AI about your fruit choice</h2>
             <textarea id="userInput" placeholder="Ask something about your favorite fruit..." style="width: 300px; height: 60px; margin: 10px 0;"></textarea><br>
@@ -53,7 +57,7 @@
         async function askAI() {
             const userInput = document.getElementById('userInput').value.trim();
             const selectedFruit = document.getElementById('story').textContent;
-            
+
             if (!userInput) {
                 alert('Please enter a question first!');
                 return;
@@ -61,21 +65,19 @@
 
             const loading = document.getElementById('loading');
             const responseDiv = document.getElementById('aiResponse');
-            
+
             loading.style.display = 'block';
             responseDiv.textContent = '';
 
             try {
-                const messages = [
-                    {
+                const messages = [{
                         role: 'system',
                         content: 'You are a helpful assistant that answers questions about fruits and food.'
                     },
                     {
                         role: 'user',
-                        content: selectedFruit ? 
-                            `My favorite fruit is ${selectedFruit}. ${userInput}` : 
-                            userInput
+                        content: selectedFruit ?
+                            `My favorite fruit is ${selectedFruit}. ${userInput}` : userInput
                     }
                 ];
 
@@ -97,7 +99,7 @@
 
                 const data = await response.json();
                 const aiMessage = data.choices?.[0]?.message?.content || 'No response received';
-                
+
                 responseDiv.textContent = aiMessage;
 
             } catch (error) {
@@ -117,6 +119,8 @@
                 }
             });
         });
+
     </script>
 </body>
+
 </html>
