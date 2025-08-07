@@ -78,10 +78,8 @@ export default async function handler(req, res) {
 
         if (!response.ok) {
             const errorData = await response.text();
-            console.error('Gemini API error:', errorData);
             return res.status(response.status).json({
                 error: 'Gemini API request failed',
-                response: response,
                 details: errorData,
             });
         }
@@ -90,7 +88,6 @@ export default async function handler(req, res) {
         res.status(200).json(data);
 
     } catch (error) {
-        console.error('Proxy error:', error);
         res.status(500).json({
             error: 'Internal server error',
             details: error.message
