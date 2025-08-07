@@ -58,16 +58,15 @@
 
         async function continueStory(content) {
             const storyElement = document.getElementById('story');
+            const aiInstruction = 'Choose between three AI-generated options to write your story.'
 
             if (typeof genre == 'undefined') {
                 genre = content;
-                storyElement.textContent = aiInstruction;
-                return;
+                storyElement.textContent = "";
             }
 
-            const aiInstruction = 'Choose between three AI-generated options to write your story.'
-            const loading = document.getElementById('loading');
 
+            const loading = document.getElementById('loading');
             loading.style.display = 'block';
 
             messages = [{
@@ -83,13 +82,18 @@
                 }
             ]
 
-            if (storyElement.textContent == aiInstruction) {
-                storyElement.textContent = ""
+            if (storyElement.textContent == "") {
+                storyElement.textContent = aiInstruction;
             } else {
-                storyElement.textContent += " "
+                if (storyElement.textContent == aiInstruction) {
+                    storyElement.textContent = content;
+                } else {
+                    storyElement.textContent += ' ';
+                    storyElement.textContent += content;
+                }
                 messages.push({
                     role: 'assistant',
-                    content: storyElement.textContent
+                    content: storyElement.textContent + ' '
                 });
             }
 
