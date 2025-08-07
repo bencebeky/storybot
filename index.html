@@ -63,24 +63,24 @@
             }
 
             const storyElement = document.getElementById('story');
-            const option1Element = document.getElementById('option1');
-            const option2Element = document.getElementById('option2');
-            const option3Element = document.getElementById('option3');
-
-            const aiInstruction = 'Choose between three AI-generated options to write your story.'
-
             if (typeof genre == 'undefined') {
                 genre = optionText;
                 storyElement.textContent = "";
             }
 
+            const aiInstruction = 'Choose between three AI-generated options to write your story.'
+            const prefill = '<sentence>'
 
-            const loading = document.getElementById('loading');
-            loading.style.display = 'block';
+            const option1Element = document.getElementById('option1');
+            const option2Element = document.getElementById('option2');
+            const option3Element = document.getElementById('option3');
 
             option1Element.textContent = 'Thinking...';
             option2Element.textContent = 'Thinking...';
             option3Element.textContent = 'Thinking...';
+
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
 
             const systemInstruction = {
                 parts: [{
@@ -189,7 +189,7 @@
                     throw new Error(`${response.status} Error: ${data.details}`);
                 }
 
-                sentences = data.candidates?.[0]?.content.parts[0].text || '';
+                sentences = prefill + data.candidates?.[0]?.content.parts[0].text || '';
                 console.log(sentences);
 
                 const regex = /<sentence>([^<>]*)<\/sentence>/gm;
