@@ -57,6 +57,10 @@
         let genre;
 
         async function continueStory(content) {
+            if (content == 'error') {
+                return;
+            }
+
             const storyElement = document.getElementById('story');
             const aiInstruction = 'Choose between three AI-generated options to write your story.'
 
@@ -118,8 +122,11 @@
                 const response1 = await fetch('/api/gemini', options);
                 if (!response1.ok) {
                     const errorData = await response1.json();
-                    console.log(errorData);
-                    throw new Error(errorData.error || 'Request failed');
+                    console.log(response1.status, errorData);
+                    throw new Error({
+                        status: response1.status,
+                        message: errorData.error.message
+                    } || 'Request failed');
                 }
 
                 const data1 = await response.json();
@@ -130,10 +137,10 @@
                 }
                 document.getElementById('option1').textContext = continuation1;
             } catch (error) {
-                storyElement.textContent = `Error: ${error.message}`;
-                document.getElementById('option1').textContext = 'error';
-                document.getElementById('option2').textContext = 'error';
-                document.getElementById('option3').textContext = 'error';
+                storyElement.textContent = `${error.status} Error: ${error.message}`;
+                document.getElementById('option1').textContent = 'error';
+                document.getElementById('option2').textContent = 'error';
+                document.getElementById('option3').textContent = 'error';
             } finally {
                 loading.style.display = 'none';
             }
