@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages, model = 'claude-3-haiku-20240307', stop = [] } = req.body;
+    const { messages, model = 'claude-3-5-haiku-20241022', stop = [] } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Messages array is required' });
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': process.env.CLAUDE_API_KEY,
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
         'Content-Type': 'application/json',
         'anthropic-version': '2023-06-01'
       },

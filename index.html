@@ -100,14 +100,13 @@
             console.log(messages);
 
             try {
-                const response = await fetch('/api/openrouter', {
+                const response = await fetch('/api/anthropic', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         messages: messages,
-                        model: 'meta-llama/llama-3.2-3b-instruct:free',
                         stop: ['.', '!', '?']
                     })
                 });
@@ -164,15 +163,13 @@
                     }
                 ];
 
-                const response = await fetch('/api/openrouter', {
+                const response = await fetch('/api/anthropic', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         messages: messages,
-                        model: 'meta-llama/llama-3.2-3b-instruct:free',
-                        stop: ['.', '!', '?']
                     })
                 });
 
