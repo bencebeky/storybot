@@ -78,9 +78,14 @@
                     text: `You are a helpful assistant that writes short ` +
                         `stories appropriate for all ages in the genre of ` +
                         `${genre}. Do not include violence, darkness, ` +
-                        `crudeness, or hurtful behavior in your stories.`
+                        `crudeness, or hurtful behavior in your stories. ` +
+                        `Write in short sentences.`
                 }]
             };
+
+            const sentenceInstructions = 'Enclose each sentence in <sentence> ' +
+                'tags. Make the sentences short. Do not write ' +
+                'anything other than these three sentences.'
 
             if (storyElement.textContent == "") {
                 storyElement.textContent = aiInstruction;
@@ -90,9 +95,7 @@
                     parts: [{
                         text: `Write three different alternatives for the very ` +
                             `first sentence of a short story in the genre of ` +
-                            `${genre}. Enclose each sentence in <sentence> ` +
-                            `tags. Do not write anything other than these ` +
-                            `three sentences.`
+                            `${genre}. ` + sentenceInstructions
                     }]
                 }];
             } else {
@@ -119,9 +122,7 @@
                         parts: [{
                             text: `Write three different alternatives for the ` +
                                 `next sentence of the short story you just ` +
-                                `wrote. Enclose each sentence in <sentence> ` +
-                                `tags. Do not write anything other than ` +
-                                `these three sentences.`
+                                `wrote. ` + sentenceInstructions
                         }]
                     }
                 ];
