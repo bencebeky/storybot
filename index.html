@@ -131,7 +131,7 @@
                     });
                 }
 
-                const continuation1 = data1.candidates?.[0]?.content.parts[0].text || '';
+                continuation1 = data1.candidates?.[0]?.content.parts[0].text || '';
                 continuation1 = continuation1.trim();
                 if (data1.candidates?.[0]?.finishReason == 'STOP') {
                     continuation1 += '.';
