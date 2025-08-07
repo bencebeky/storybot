@@ -83,10 +83,6 @@
                 }]
             };
 
-            const sentenceInstructions = 'Enclose each sentence in <sentence> ' +
-                'tags. Make the sentences short. Do not write ' +
-                'anything other than these three sentences.'
-
             if (storyElement.textContent == "") {
                 storyElement.textContent = aiInstruction;
 
@@ -95,7 +91,10 @@
                     parts: [{
                         text: `Write three different alternatives for the very ` +
                             `first sentence of a short story in the genre of ` +
-                            `${genre}. ` + sentenceInstructions
+                            `${genre}. ` +
+                            'Enclose each sentence in <sentence> ' +
+                            'tags. Make the sentences short, but not too short. Do not write ' +
+                            'anything other than these three sentences.'
                     }]
                 }];
             } else {
@@ -121,8 +120,11 @@
                         role: 'user',
                         parts: [{
                             text: `Write three different alternatives for the ` +
-                                `next sentence of the short story you just ` +
-                                `wrote. ` + sentenceInstructions
+                                `next phrase or sentence of the short story you just ` +
+                                `wrote. They can be complete sentences ending in a period, question mark, or exclamation mark, or they can be fractional sentences ending in comma. If the beginning of the story above does not end in a complete sentence, continue that fractional sentence.` +
+                                'Enclose each phrase in <sentence> ' +
+                                'tags. Make the phrases short, but not too short. Do not write ' +
+                                'anything other than these three sentences or phrases.'
                         }]
                     }
                 ];
