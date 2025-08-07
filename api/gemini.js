@@ -38,7 +38,7 @@ export default async function handler(req, res) {
 
     try {
         const {
-            model = 'gemini-2.5-flash-latest', systemInstruction, contents, generationConfig
+            model = 'gemini-2.5-flash', systemInstruction, contents
         } = req.body;
 
         if (!contents || !Array.isArray(contents)) {
@@ -47,23 +47,27 @@ export default async function handler(req, res) {
             });
         }
 
-        const apiKey = process.env.GEMINI_API_KEY;
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const url = 'https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent';
 
         const requestBody = {
             systemInstruction,
             contents,
             generationConfig: {
                 temperature: 0.7,
-                maxOutputTokens: 1000,
-                ...(generationConfig || {})
+                maxOutputTokens: 100,
+                stopSequences: ['.', '!', '?'],
+                thinkingConfig: {
+                    thinkingBudget: 0
+                },
             }
+
         };
 
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'x-goog-api-key': process.env.GEMINI_API_KEY,
             },
             body: JSON.stringify(requestBody)
         });
