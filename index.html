@@ -120,7 +120,7 @@
 
             try {
                 const response1 = await fetch('/api/gemini', options);
-                const data1 = await response.json();
+                const data1 = await response1.json();
                 console.error(response1);
                 console.error(data1);
                 if (!response1.ok) {
