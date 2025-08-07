@@ -65,8 +65,6 @@ export default async function handler(req, res) {
 
         };
 
-        console.log(requestBody);
-
         const options = {
             method: 'POST',
             headers: {
@@ -76,8 +74,6 @@ export default async function handler(req, res) {
             body: JSON.stringify(requestBody)
         };
 
-        console.log(options);
-
         const response = await fetch(url, options);
 
         if (!response.ok) {
@@ -86,6 +82,9 @@ export default async function handler(req, res) {
             return res.status(response.status).json({
                 error: 'Gemini API request failed',
                 details: errorData,
+                url: url,
+                requestBody: requestBody,
+                options: options
             });
         }
 
