@@ -125,10 +125,7 @@
                 console.error(data1);
                 if (!response1.ok) {
                     console.error(response1.status, data1);
-                    throw new Error({
-                        status: response1.status,
-                        message: data1
-                    });
+                    throw new Error(`${response1.status} Error: ${data1}`);
                 }
 
                 continuation1 = data1.candidates?.[0]?.content.parts[0].text || '';
@@ -144,10 +141,7 @@
                 console.error(data2);
                 if (!response2.ok) {
                     console.error(response2.status, data2);
-                    throw new Error({
-                        status: response2.status,
-                        message: data2
-                    });
+                    throw new Error(`${response2.status} Error: ${data2}`);
                 }
 
                 continuation2 = data2.candidates?.[0]?.content.parts[0].text || '';
@@ -163,10 +157,7 @@
                 console.error(data3);
                 if (!response3.ok) {
                     console.error(response3.status, data3);
-                    throw new Error({
-                        status: response3.status,
-                        message: data3
-                    });
+                    throw new Error(`${response3.status} Error: ${data3}`);
                 }
 
                 continuation3 = data3.candidates?.[0]?.content.parts[0].text || '';
@@ -176,7 +167,7 @@
                 }
                 document.getElementById('option3').textContent = continuation3;
             } catch (error) {
-                storyElement.textContent = `${error.status} Error: ${error.message}`;
+                storyElement.textContent = error.message;
                 document.getElementById('option1').textContent = 'error';
                 document.getElementById('option2').textContent = 'error';
                 document.getElementById('option3').textContent = 'error';
