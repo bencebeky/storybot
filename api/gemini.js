@@ -2,80 +2,89 @@
 const rateLimitMap = new Map();
 
 export default async function handler(req, res) {
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  // Rate limiting: 100 requests per 10 minutes
-  const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  const now = Date.now();
-  const windowMs = 10 * 60 * 1000; // 10 minutes
-  const maxRequests = 100;
-
-  if (!rateLimitMap.has(clientIP)) {
-    rateLimitMap.set(clientIP, { count: 1, resetTime: now + windowMs });
-  } else {
-    const clientData = rateLimitMap.get(clientIP);
-    if (now > clientData.resetTime) {
-      clientData.count = 1;
-      clientData.resetTime = now + windowMs;
-    } else {
-      clientData.count++;
-      if (clientData.count > maxRequests) {
-        return res.status(429).json({ 
-          error: 'Too many requests. Please try again later.',
-          retryAfter: Math.ceil((clientData.resetTime - now) / 1000)
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+        return res.status(405).json({
+            error: 'Method not allowed'
         });
-      }
-    }
-  }
-
-  try {
-    const { model = 'gemini-1.5-flash-latest', systemInstruction, contents, generationConfig } = req.body;
-
-    if (!contents || !Array.isArray(contents)) {
-      return res.status(400).json({ error: 'Contents array is required' });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    // Rate limiting: 100 requests per 10 minutes
+    const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const now = Date.now();
+    const windowMs = 10 * 60 * 1000; // 10 minutes
+    const maxRequests = 100;
 
-    const requestBody = {
-      systemInstruction,
-      contents,
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 1000,
-        ...(generationConfig || {})
-      }
-    };
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody)
-    });
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Gemini API error:', errorData);
-      return res.status(response.status).json({
-        error: 'Gemini API request failed',
-        details: errorData,
-      });
+    if (!rateLimitMap.has(clientIP)) {
+        rateLimitMap.set(clientIP, {
+            count: 1,
+            resetTime: now + windowMs
+        });
+    } else {
+        const clientData = rateLimitMap.get(clientIP);
+        if (now > clientData.resetTime) {
+            clientData.count = 1;
+            clientData.resetTime = now + windowMs;
+        } else {
+            clientData.count++;
+            if (clientData.count > maxRequests) {
+                return res.status(429).json({
+                    error: 'Too many requests. Please try again later.',
+                    retryAfter: Math.ceil((clientData.resetTime - now) / 1000)
+                });
+            }
+        }
     }
 
-    const data = await response.json();
-    res.status(200).json(data);
+    try {
+        const {
+            model = 'gemini-1.5-flash-latest', systemInstruction, contents, generationConfig
+        } = req.body;
 
-  } catch (error) {
-    console.error('Proxy error:', error);
-    res.status(500).json({ 
-      error: 'Internal server error',
-      details: error.message
-    });
-  }
+        if (!contents || !Array.isArray(contents)) {
+            return res.status(400).json({
+                error: 'Contents array is required'
+            });
+        }
+
+        const apiKey = process.env.GEMINI_API_KEY;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+        const requestBody = {
+            systemInstruction,
+            contents,
+            generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 1000,
+                ...(generationConfig || {})
+            }
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error('Gemini API error:', errorData);
+            return res.status(response.status).json({
+                error: 'Gemini API request failed',
+                details: errorData,
+            });
+        }
+
+        const data = await response.json();
+        res.status(200).json(data);
+
+    } catch (error) {
+        console.error('Proxy error:', error);
+        res.status(500).json({
+            error: 'Internal server error',
+            details: error.message
+        });
+    }
 }

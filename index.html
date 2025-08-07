@@ -70,18 +70,19 @@
             loading.style.display = 'block';
 
             const systemInstruction = {
-                parts: [{ text: `You are a helpful assistant that writes short ` +
+                parts: [{
+                    text: `You are a helpful assistant that writes short ` +
                         `stories appropriate for all ages in the genre of ` +
                         `${genre}. Do not include violence, darkness, ` +
                         `crudeness, or hurtful behavior in your stories.`
                 }]
             };
-            const contents = [
-                {
-                    role: 'user',
-                    parts: [{ text: `Write a short story in the genre of ${genre}.` }]
-                }
-            ];
+            const contents = [{
+                role: 'user',
+                parts: [{
+                    text: `Write a short story in the genre of ${genre}.`
+                }]
+            }];
 
             if (storyElement.textContent == "") {
                 storyElement.textContent = aiInstruction;
@@ -94,21 +95,28 @@
                 }
                 contents.push({
                     role: 'model',
-                    parts: [{ text: storyElement.textContent + ' ' }]
+                    parts: [{
+                        text: storyElement.textContent + ' '
+                    }]
                 });
             }
 
-            console.log({ systemInstruction, contents });
+            console.log({
+                systemInstruction,
+                contents
+            });
 
             try {
                 const response = await fetch('/api/gemini', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         systemInstruction: systemInstruction,
                         contents: contents,
                         generationConfig: {
-                           stopSequences: ['.', '!', '?']
+                            stopSequences: ['.', '!', '?']
                         }
                     })
                 });
@@ -151,23 +159,30 @@
 
             try {
                 const systemInstruction = {
-                    parts: [{ text: 'You are a helpful assistant that answers questions about fruits and food.'}]
+                    parts: [{
+                        text: 'You are a helpful assistant that answers questions about fruits and food.'
+                    }]
                 };
-                const contents = [
-                    {
+                const contents = [{
                         role: 'user',
-                        parts: [{ text: selectedFruit ?
-                            `My favorite fruit is ${selectedFruit}. ${userInput}` : userInput }]
+                        parts: [{
+                            text: selectedFruit ?
+                                `My favorite fruit is ${selectedFruit}. ${userInput}` : userInput
+                        }]
                     },
                     {
                         role: 'model',
-                        parts: [{ text: 'I see that your favorite fruit is' }]
+                        parts: [{
+                            text: 'I see that your favorite fruit is'
+                        }]
                     }
                 ];
 
                 const response = await fetch('/api/gemini', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         systemInstruction: systemInstruction,
                         contents: contents

@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     try {
         const {
             messages,
-            model = 'claude-3-5-haiku-20241022',
+            model = 'meta-llama/llama-3.2-3b-instruct:free',
             stop = []
         } = req.body;
 
@@ -49,32 +49,27 @@ export default async function handler(req, res) {
             });
         }
 
-        // Convert OpenAI format to Claude format
-        const systemMessage = messages.find(msg => msg.role === 'system');
-        const conversationMessages = messages.filter(msg => msg.role !== 'system');
-
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'x-api-key': process.env.ANTHROPIC_API_KEY,
+                'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
                 'Content-Type': 'application/json',
-                'anthropic-version': '2023-06-01'
+                'HTTP-Referer': process.env.VERCEL_URL || 'http://localhost:3000',
+                'X-Title': 'Vercel OpenRouter Proxy'
             },
             body: JSON.stringify({
                 model,
+                messages,
                 max_tokens: 1000,
-                temperature: 0.7,
-                system: systemMessage?.content || '',
-                messages: conversationMessages,
-                stop_sequences: stop
+                temperature: 0.7
             })
         });
 
         if (!response.ok) {
             const errorData = await response.text();
-            console.error('Claude API error:', errorData);
+            console.error('OpenRouter API error:', errorData);
             return res.status(response.status).json({
-                error: 'Claude API request failed',
+                error: 'OpenRouter API request failed',
                 details: errorData
             });
         }
