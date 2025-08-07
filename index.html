@@ -137,6 +137,44 @@
                     continuation1 += '.';
                 }
                 document.getElementById('option1').textContent = continuation1;
+
+                const response2 = await fetch('/api/gemini', options);
+                const data2 = await response2.json();
+                console.error(response2);
+                console.error(data2);
+                if (!response2.ok) {
+                    console.error(response2.status, data2);
+                    throw new Error({
+                        status: response2.status,
+                        message: data2
+                    });
+                }
+
+                continuation2 = data2.candidates?.[0]?.content.parts[0].text || '';
+                continuation2 = continuation2.trim();
+                if (data2.candidates?.[0]?.finishReason == 'STOP') {
+                    continuation2 += '.';
+                }
+                document.getElementById('option2').textContent = continuation2;
+
+                const response3 = await fetch('/api/gemini', options);
+                const data3 = await response3.json();
+                console.error(response3);
+                console.error(data3);
+                if (!response3.ok) {
+                    console.error(response3.status, data3);
+                    throw new Error({
+                        status: response3.status,
+                        message: data3
+                    });
+                }
+
+                continuation3 = data3.candidates?.[0]?.content.parts[0].text || '';
+                continuation3 = continuation3.trim();
+                if (data3.candidates?.[0]?.finishReason == 'STOP') {
+                    continuation3 += '.';
+                }
+                document.getElementById('option3').textContent = continuation3;
             } catch (error) {
                 storyElement.textContent = `${error.status} Error: ${error.message}`;
                 document.getElementById('option1').textContent = 'error';
