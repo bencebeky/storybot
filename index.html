@@ -150,6 +150,13 @@
                 };
             }
 
+            content.push({
+                role: 'model',
+                parts: [{
+                    text: '<sentence>'
+                }]
+            });
+
             const options = {
                 method: 'POST',
                 headers: {
