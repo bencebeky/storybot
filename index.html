@@ -63,6 +63,10 @@
             }
 
             const storyElement = document.getElementById('story');
+            const option1Element = document.getElementById('option1');
+            const option2Element = document.getElementById('option2');
+            const option3Element = document.getElementById('option3');
+
             const aiInstruction = 'Choose between three AI-generated options to write your story.'
 
             if (typeof genre == 'undefined') {
@@ -73,6 +77,10 @@
 
             const loading = document.getElementById('loading');
             loading.style.display = 'block';
+
+            option1Element.textContent = 'Thinking...';
+            option2Element.textContent = 'Thinking...';
+            option3Element.textContent = 'Thinking...';
 
             const systemInstruction = {
                 parts: [{
@@ -188,24 +196,24 @@
                 if (match == null) {
                     throw new Error(`invalid response`);
                 }
-                document.getElementById('option1').textContent = match[1].trim();
+                option1Element.textContent = match[1].trim();
 
                 match = regex.exec(sentences)
                 if (match == null) {
                     throw new Error(`invalid response`);
                 }
-                document.getElementById('option2').textContent = match[1].trim();
+                option2Element.textContent = match[1].trim();
 
                 match = regex.exec(sentences)
                 if (match == null) {
                     throw new Error(`invalid response`);
                 }
-                document.getElementById('option3').textContent = match[1].trim();
+                option3Element.textContent = match[1].trim();
             } catch (error) {
                 storyElement.textContent = error.message;
-                document.getElementById('option1').textContent = 'error';
-                document.getElementById('option2').textContent = 'error';
-                document.getElementById('option3').textContent = 'error';
+                option1Element.textContent = 'error';
+                option2Element.textContent = 'error';
+                option3Element.textContent = 'error';
             } finally {
                 loading.style.display = 'none';
             }
