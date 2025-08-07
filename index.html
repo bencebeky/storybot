@@ -74,13 +74,15 @@
                     text: `You are a helpful assistant that writes short ` +
                         `stories appropriate for all ages in the genre of ` +
                         `${genre}. Do not include violence, darkness, ` +
-                        `crudeness, or hurtful behavior in your stories.`
+                        `crudeness, or hurtful behavior in your stories. Use
+                        short sentences.`
                 }]
             };
             const contents = [{
                 role: 'user',
                 parts: [{
-                    text: `Write a short story in the genre of ${genre}.`
+                    text: `Write a short story in the genre of ${genre}. Use
+                    short sentences.`
                 }]
             }];
 
@@ -101,44 +103,40 @@
                 });
             }
 
-            console.log({
-                systemInstruction,
-                contents
-            });
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    systemInstruction: systemInstruction,
+                    contents: contents,
+                })
+            };
 
             try {
-                const response = await fetch('/api/gemini', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        systemInstruction: systemInstruction,
-                        contents: contents,
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
+                const response1 = await fetch('/api/gemini', options);
+                if (!response1.ok) {
+                    const errorData = await response1.json();
                     console.log(errorData);
                     throw new Error(errorData.error || 'Request failed');
                 }
 
-                const data = await response.json();
-                const aiMessage = data.candidates?.[0]?.content.parts[0].text || 'No response received';
-                console.log(data.candidates);
-                // TOOD extract stopping character and re-append
-
-                storyElement.textContent = aiMessage;
-
+                const data1 = await response.json();
+                const continuation1 = data1.candidates?.[0]?.content.parts[0].text || '';
+                continuation1 = continuation1.trim();
+                if (data1.candidates?.[0]?.finishReason == 'STOP') {
+                    continuation1 += '.';
+                }
+                document.getElementById('option1').textContext = continuation1;
             } catch (error) {
-                console.error('Error:', error);
                 storyElement.textContent = `Error: ${error.message}`;
+                document.getElementById('option1').textContext = 'error';
+                document.getElementById('option2').textContext = 'error';
+                document.getElementById('option3').textContext = 'error';
             } finally {
                 loading.style.display = 'none';
             }
-
-            // TODO .trim()
         }
 
     </script>

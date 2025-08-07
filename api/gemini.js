@@ -57,7 +57,7 @@ export default async function handler(req, res) {
             generationConfig: {
                 temperature: 0.7,
                 maxOutputTokens: 100,
-                stopSequences: ['.', '!', '?'],
+                stopSequences: ['.'],
                 thinkingConfig: {
                     thinkingBudget: 0
                 },
@@ -65,11 +65,10 @@ export default async function handler(req, res) {
 
         };
 
-        const api_key = process.env.GEMINI_API_KEY;
         const options = {
             method: 'POST',
             headers: {
-                'x-goog-api-key': api_key,
+                'x-goog-api-key': process.env.GEMINI_API_KEY,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestBody)
@@ -83,10 +82,6 @@ export default async function handler(req, res) {
             return res.status(response.status).json({
                 error: 'Gemini API request failed',
                 details: errorData,
-                url: url,
-                requestBody: requestBody,
-                options: options,
-                api_key: api_key
             });
         }
 
