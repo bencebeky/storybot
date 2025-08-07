@@ -25,6 +25,34 @@
             background-color: lightblue;
         }
 
+        .story-container {
+            position: relative;
+            max-width: 80%;
+        }
+
+        .story-container>div,
+        .story-container>textarea {
+            word-wrap: break-word;
+            /* make sure the div and the textarea wrap words in the same way */
+            overflow-wrap: break-word;
+            /* make sure the div and the textarea wrap words in the same way */
+            box-sizing: border-box;
+            padding: 2px;
+            width: 100%;
+        }
+
+        .story-container>textarea {
+            overflow: hidden;
+            position: absolute;
+            height: 100%;
+        }
+
+        .story-container>div {
+            padding-bottom: 1.5em;
+            /* A bit more than one additional line of text. */
+            visibility: hidden;
+        }
+
         #story {
             border: 1px solid #ccc;
             padding: 5px;
@@ -36,7 +64,10 @@
 <body>
     <div class="container">
         <h2>Create a story with AI</h2>
-        <textarea id="story" name="story" placeholder="Choose between three AI-generated options to write your story." style="width: 300px; margin: 10px 0; min-height: 60px; resize: vertical; overflow-y: auto;"></textarea><br>
+        <div class="story-container">
+            <textarea id="story" name="story" placeholder="Choose between three AI-generated options to write your story."></textarea>
+            <div id="textCopy"></div>
+        </div><br>
         <button id="option1" onclick="continueStory(this.textContent)" class="fruit-option" style="cursor: pointer;">apple</button>
         <button id="option2" onclick="continueStory(this.textContent)" class="fruit-option" style="cursor: pointer;">banana</button>
         <button id="option3" onclick="continueStory(this.textContent)" class="fruit-option" style="cursor: pointer;">mango</button>
@@ -53,6 +84,7 @@
         function continueStory(fruit) {
             const storyElement = document.getElementById('story');
             storyElement.textContent += fruit;
+            textCopy.innerHTML = story.value.replace(/\n/g, '<br/>')
         }
 
         async function askAI() {
