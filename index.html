@@ -71,13 +71,6 @@
             transform: translateY(0);
         }
 
-        #loading {
-            display: none;
-            margin-top: 1.5rem;
-            color: #6c757d;
-            font-style: italic;
-            font-size: 1.1rem;
-        }
 
         .button-container {
             display: flex;
@@ -106,7 +99,6 @@
                 <button id="option2" onclick="continueStory(this.textContent)" class="option-btn">Animal Tale</button>
                 <button id="option3" onclick="continueStory(this.textContent)" class="option-btn">Historical Fiction</button>
             </div>
-            <div id="loading">Thinking...</div>
         </div>
     </div>
     <script>
@@ -134,8 +126,6 @@
             option2Element.textContent = 'Thinking...';
             option3Element.textContent = 'Thinking...';
 
-            const loading = document.getElementById('loading');
-            loading.style.display = 'block';
 
             const systemInstruction = {
                 parts: [{
@@ -272,7 +262,6 @@
                 option2Element.textContent = 'error';
                 option3Element.textContent = 'error';
             } finally {
-                loading.style.display = 'none';
             }
         }
 
